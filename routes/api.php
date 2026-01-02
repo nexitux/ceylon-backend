@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\ContactMessageController;
 use App\Http\Controllers\Api\Admin\AdminContactMessageController;
 use App\Http\Controllers\Api\SiteSettingController;
 use App\Http\Controllers\Api\Admin\AdminSiteSettingController;
+use App\Http\Controllers\Api\Admin\AdminDashboardController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -59,6 +60,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     // Site Settings
     Route::get('site-settings', [AdminSiteSettingController::class, 'index']);
     Route::post('site-settings', [AdminSiteSettingController::class, 'store']);
+
+    // Dashboard
+    Route::get('dashboard', [AdminDashboardController::class, 'index']);
 });
 
 // Public Contact Message
