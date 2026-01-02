@@ -24,17 +24,23 @@ class AdminCategoryController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image2' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image3' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image4' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'status' => 'boolean',
         ]);
 
         // Temporarily set slug without ID
         $validated['slug'] = \Illuminate\Support\Str::slug($validated['name']);
 
-        if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $filename = $file->getClientOriginalName();
-            $path = $file->storeAs('categories', $filename, 'public');
-            $validated['image'] = $path;
+        $images = ['image', 'image2', 'image3', 'image4'];
+        foreach ($images as $imgField) {
+            if ($request->hasFile($imgField)) {
+                $file = $request->file($imgField);
+                $filename = $file->getClientOriginalName();
+                $path = $file->storeAs('categories', $filename, 'public');
+                $validated[$imgField] = $path;
+            }
         }
 
         $category = Category::create($validated);
@@ -51,7 +57,8 @@ class AdminCategoryController extends Controller
      */
     public function show(string $id)
     {
-        $category = Category::with('subCategories')->find($id);
+        $decodedId = $this->decodeId($id);
+        $category = Category::with('subCategories')->find($decodedId);
 
         if (!$category) {
             return response()->json(['message' => 'Category not found'], 404);
@@ -65,7 +72,8 @@ class AdminCategoryController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $category = Category::find($id);
+        $decodedId = $this->decodeId($id);
+        $category = Category::find($decodedId);
 
         if (!$category) {
             return response()->json(['message' => 'Category not found'], 404);
@@ -74,6 +82,9 @@ class AdminCategoryController extends Controller
         $validated = $request->validate([
             'name' => 'sometimes|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image2' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image3' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image4' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'status' => 'boolean',
         ]);
 
@@ -81,15 +92,18 @@ class AdminCategoryController extends Controller
             $validated['slug'] = \Illuminate\Support\Str::slug($validated['name']) . '-' . $category->id;
         }
 
-        if ($request->hasFile('image')) {
-            // Delete old image if exists
-            if ($category->image && \Illuminate\Support\Facades\Storage::disk('public')->exists($category->image)) {
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($category->image);
+        $images = ['image', 'image2', 'image3', 'image4'];
+        foreach ($images as $imgField) {
+            if ($request->hasFile($imgField)) {
+                // Delete old image if exists
+                if ($category->$imgField && \Illuminate\Support\Facades\Storage::disk('public')->exists($category->$imgField)) {
+                    \Illuminate\Support\Facades\Storage::disk('public')->delete($category->$imgField);
+                }
+                $file = $request->file($imgField);
+                $filename = $file->getClientOriginalName();
+                $path = $file->storeAs('categories', $filename, 'public');
+                $validated[$imgField] = $path;
             }
-            $file = $request->file('image');
-            $filename = $file->getClientOriginalName();
-            $path = $file->storeAs('categories', $filename, 'public');
-            $validated['image'] = $path;
         }
 
         $category->update($validated);
@@ -102,7 +116,8 @@ class AdminCategoryController extends Controller
      */
     public function destroy(string $id)
     {
-        $category = Category::find($id);
+        $decodedId = $this->decodeId($id);
+        $category = Category::find($decodedId);
 
         if (!$category) {
             return response()->json(['message' => 'Category not found'], 404);
@@ -111,5 +126,27 @@ class AdminCategoryController extends Controller
         $category->delete();
 
         return response()->json(['message' => 'Category deleted']);
+    }
+
+    /**
+     * Encode ID to base64.
+     *
+     * @param int $id
+     * @return string
+     */
+    private function encodeId(int $id): string
+    {
+        return base64_encode($id);
+    }
+
+    /**
+     * Decode base64 ID to integer.
+     *
+     * @param string $encodedId
+     * @return int
+     */
+    private function decodeId(string $encodedId): int
+    {
+        return (int) base64_decode($encodedId);
     }
 }

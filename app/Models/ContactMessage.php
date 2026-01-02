@@ -14,7 +14,17 @@ class ContactMessage extends Model
         'email',
         'phone',
         'location',
-        'subject',
-        'message',
     ];
+
+    protected $appends = ['encoded_id'];
+
+    /**
+     * Get the base64 encoded ID.
+     *
+     * @return string
+     */
+    public function getEncodedIdAttribute(): string
+    {
+        return base64_encode($this->id);
+    }
 }

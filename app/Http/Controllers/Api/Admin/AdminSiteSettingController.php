@@ -32,6 +32,7 @@ class AdminSiteSettingController extends Controller
             'ss_favicon' => 'nullable|image|max:1024',
             'ss_favicon_alt' => 'nullable|string|max:200',
             'ss_phone' => 'nullable|string|max:20',
+            'ss_booking_phone' => 'nullable|string|max:20',
             'ss_email' => 'nullable|email',
             'ss_address' => 'nullable|string',
             'ss_facebook' => 'nullable|url',

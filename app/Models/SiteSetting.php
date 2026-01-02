@@ -17,6 +17,7 @@ class SiteSetting extends Model
         'ss_favicon',
         'ss_favicon_alt',
         'ss_phone',
+        'ss_booking_phone',
         'ss_email',
         'ss_address',
         'ss_facebook',

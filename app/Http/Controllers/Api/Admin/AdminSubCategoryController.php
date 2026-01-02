@@ -44,7 +44,8 @@ class AdminSubCategoryController extends Controller
      */
     public function show(string $id)
     {
-        $subCategory = SubCategory::with('category')->find($id);
+        $decodedId = $this->decodeId($id);
+        $subCategory = SubCategory::with('category')->find($decodedId);
 
         if (!$subCategory) {
             return response()->json(['message' => 'SubCategory not found'], 404);
@@ -58,7 +59,8 @@ class AdminSubCategoryController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $subCategory = SubCategory::find($id);
+        $decodedId = $this->decodeId($id);
+        $subCategory = SubCategory::find($decodedId);
 
         if (!$subCategory) {
             return response()->json(['message' => 'SubCategory not found'], 404);
@@ -84,7 +86,8 @@ class AdminSubCategoryController extends Controller
      */
     public function destroy(string $id)
     {
-        $subCategory = SubCategory::find($id);
+        $decodedId = $this->decodeId($id);
+        $subCategory = SubCategory::find($decodedId);
 
         if (!$subCategory) {
             return response()->json(['message' => 'SubCategory not found'], 404);
@@ -93,5 +96,27 @@ class AdminSubCategoryController extends Controller
         $subCategory->delete();
 
         return response()->json(['message' => 'SubCategory deleted']);
+    }
+
+    /**
+     * Encode ID to base64.
+     *
+     * @param int $id
+     * @return string
+     */
+    private function encodeId(int $id): string
+    {
+        return base64_encode($id);
+    }
+
+    /**
+     * Decode base64 ID to integer.
+     *
+     * @param string $encodedId
+     * @return int
+     */
+    private function decodeId(string $encodedId): int
+    {
+        return (int) base64_decode($encodedId);
     }
 }
