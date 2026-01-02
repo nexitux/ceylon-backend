@@ -2,15 +2,18 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\AdminCategoryController;
-use App\Http\Controllers\Api\AdminSubCategoryController;
+use App\Http\Controllers\Api\Admin\AdminCategoryController;
+use App\Http\Controllers\Api\Admin\AdminSubCategoryController;
 
-use App\Http\Controllers\Api\AdminAuthController;
+use App\Http\Controllers\Api\Admin\AdminAuthController;
+use App\Http\Controllers\Api\ContactMessageController;
+use App\Http\Controllers\Api\Admin\AdminContactMessageController;
+use App\Http\Controllers\Api\SiteSettingController;
+use App\Http\Controllers\Api\Admin\AdminSiteSettingController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
-
 Route::get('/test', function () {
     return response()->json(['message' => 'API is working']);
 });
@@ -47,4 +50,19 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::get('sub-categories/{id}', [AdminSubCategoryController::class, 'show']);
     Route::put('sub-categories/{id}', [AdminSubCategoryController::class, 'update']);
     Route::delete('sub-categories/{id}', [AdminSubCategoryController::class, 'destroy']);
+
+    // Contact Messages
+    Route::get('contact-messages', [AdminContactMessageController::class, 'index']);
+    Route::get('contact-messages/{id}', [AdminContactMessageController::class, 'show']);
+    Route::delete('contact-messages/{id}', [AdminContactMessageController::class, 'destroy']);
+
+    // Site Settings
+    Route::get('site-settings', [AdminSiteSettingController::class, 'index']);
+    Route::post('site-settings', [AdminSiteSettingController::class, 'store']);
 });
+
+// Public Contact Message
+Route::post('contact', [ContactMessageController::class, 'store']);
+
+// Public Site Settings
+Route::get('site-settings', [SiteSettingController::class, 'index']);

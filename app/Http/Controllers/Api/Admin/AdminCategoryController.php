@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
@@ -27,6 +27,7 @@ class AdminCategoryController extends Controller
             'status' => 'boolean',
         ]);
 
+        // Temporarily set slug without ID
         $validated['slug'] = \Illuminate\Support\Str::slug($validated['name']);
 
         if ($request->hasFile('image')) {
@@ -37,6 +38,10 @@ class AdminCategoryController extends Controller
         }
 
         $category = Category::create($validated);
+        
+        // Update slug with ID
+        $category->slug = \Illuminate\Support\Str::slug($validated['name']) . '-' . $category->id;
+        $category->save();
 
         return response()->json($category, 201);
     }
@@ -73,7 +78,7 @@ class AdminCategoryController extends Controller
         ]);
 
         if (isset($validated['name'])) {
-            $validated['slug'] = \Illuminate\Support\Str::slug($validated['name']);
+            $validated['slug'] = \Illuminate\Support\Str::slug($validated['name']) . '-' . $category->id;
         }
 
         if ($request->hasFile('image')) {

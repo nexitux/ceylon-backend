@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\SubCategory;
@@ -27,9 +27,14 @@ class AdminSubCategoryController extends Controller
             'status' => 'boolean',
         ]);
 
+        // Temporarily set slug without ID
         $validated['slug'] = \Illuminate\Support\Str::slug($validated['name']);
 
         $subCategory = SubCategory::create($validated);
+        
+        // Update slug with ID
+        $subCategory->slug = \Illuminate\Support\Str::slug($validated['name']) . '-' . $subCategory->id;
+        $subCategory->save();
 
         return response()->json($subCategory, 201);
     }
@@ -66,7 +71,7 @@ class AdminSubCategoryController extends Controller
         ]);
 
         if (isset($validated['name'])) {
-            $validated['slug'] = \Illuminate\Support\Str::slug($validated['name']);
+            $validated['slug'] = \Illuminate\Support\Str::slug($validated['name']) . '-' . $subCategory->id;
         }
 
         $subCategory->update($validated);
