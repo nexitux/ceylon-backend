@@ -24,7 +24,8 @@ class ContactMessageController extends Controller
 
         // Fetch Site Settings for Admin Email and Logo
         $siteSettings = \App\Models\SiteSetting::first();
-        $adminEmail = $siteSettings->ss_email ?? env('MAIL_FROM_ADDRESS');
+        // Priority: Env MAIL_ADMIN_ADDRESS -> DB ss_email -> Env MAIL_FROM_ADDRESS
+        $adminEmail = env('MAIL_ADMIN_ADDRESS') ?? $siteSettings->ss_email ?? env('MAIL_FROM_ADDRESS');
         $logoUrl = $siteSettings->ss_logo ? asset('storage/' . $siteSettings->ss_logo) : null;
         
         $validated['logo_url'] = $logoUrl;
