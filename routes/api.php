@@ -44,6 +44,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::get('categories/{id}', [AdminCategoryController::class, 'show']);
     Route::put('categories/{id}', [AdminCategoryController::class, 'update']);
     Route::delete('categories/{id}', [AdminCategoryController::class, 'destroy']);
+    Route::delete('categories/{id}/image', [AdminCategoryController::class, 'deleteImage']);
 
     // Sub-Categories
     Route::get('sub-categories', [AdminSubCategoryController::class, 'index']);
@@ -60,6 +61,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     // Site Settings
     Route::get('site-settings', [AdminSiteSettingController::class, 'index']);
     Route::post('site-settings', [AdminSiteSettingController::class, 'store']);
+    Route::delete('site-settings/image', [AdminSiteSettingController::class, 'deleteImage']);
 
     // Dashboard
     Route::get('dashboard', [AdminDashboardController::class, 'index']);

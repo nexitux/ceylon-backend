@@ -149,4 +149,37 @@ class AdminCategoryController extends Controller
     {
         return (int) base64_decode($encodedId);
     }
+
+    /**
+     * Delete a specific image from category.
+     */
+    public function deleteImage(Request $request, string $id)
+    {
+        $validated = $request->validate([
+            'field_name' => 'required|string|in:image,image2,image3,image4',
+        ]);
+
+        $decodedId = $this->decodeId($id);
+        $category = Category::find($decodedId);
+
+        if (!$category) {
+            return response()->json(['message' => 'Category not found'], 404);
+        }
+
+        $field = $validated['field_name'];
+
+        if ($category->$field) {
+            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($category->$field)) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($category->$field);
+            }
+            
+            $category->$field = null;
+            $category->save();
+        }
+
+        return response()->json([
+            'message' => 'Image deleted successfully',
+            'data' => $category
+        ]);
+    }
 }

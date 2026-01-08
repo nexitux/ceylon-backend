@@ -84,4 +84,36 @@ class AdminSiteSettingController extends Controller
             'data' => $settings
         ]);
     }
+
+    /**
+     * Delete a specific image from site settings.
+     */
+    public function deleteImage(Request $request)
+    {
+        $validated = $request->validate([
+            'field_name' => 'required|string|in:ss_logo,ss_favicon',
+        ]);
+
+        $settings = SiteSetting::first();
+
+        if (!$settings) {
+            return response()->json(['message' => 'Settings not found'], 404);
+        }
+
+        $field = $validated['field_name'];
+
+        if ($settings->$field) {
+            if (Storage::disk('public')->exists($settings->$field)) {
+                Storage::disk('public')->delete($settings->$field);
+            }
+            
+            $settings->$field = null;
+            $settings->save();
+        }
+
+        return response()->json([
+            'message' => 'Image deleted successfully',
+            'data' => $settings
+        ]);
+    }
 }
