@@ -123,7 +123,7 @@
         <div class="email-container">
             <div class="email-hero">
                 @if(!empty($data['logo_url']))
-                    <img src="{{ $data['logo_url'] }}" alt="Logo" class="logo" style="margin-bottom: 20px; background: white; padding: 10px; border-radius: 8px;">
+                    <img src="{{ $data['logo_url'] }}" alt="Logo" class="logo" style="margin-bottom: 20px;">
                 @endif
                 <h1>We Received Your Message!</h1>
             </div>

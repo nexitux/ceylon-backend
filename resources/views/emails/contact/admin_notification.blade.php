@@ -105,7 +105,7 @@
             <div class="email-hero">
                 @if(!empty($data['logo_url']))
                     <!-- Using white background for logo visibility on blue -->
-                    <img src="{{ $data['logo_url'] }}" alt="Logo" class="logo" style="margin-bottom: 20px; background: white; padding: 10px; border-radius: 8px;">
+                    <img src="{{ $data['logo_url'] }}" alt="Logo" class="logo" style="margin-bottom: 20px;">
                 @endif
                 <h1>New Contact Message</h1>
             </div>
