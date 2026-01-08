@@ -35,7 +35,7 @@
             border-bottom: 1px solid #f3f4f6;
         }
         .logo {
-            height: 40px;
+            height: 80px;
             width: auto;
             object-fit: contain;
         }

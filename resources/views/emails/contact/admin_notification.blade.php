@@ -35,7 +35,7 @@
             border-bottom: 1px solid #f3f4f6;
         }
         .logo {
-            height: 40px;
+            height: 80px;
             width: auto;
             object-fit: contain;
         }
@@ -139,9 +139,7 @@
                     </table>
                 </div>
 
-                <p style="text-align: center;">
-                    <a href="{{ url('/admin/contact-messages') }}" style="display: inline-block; background-color: #3b82f6; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: 600;">View in Admin Panel</a>
-                </p>
+               
             </div>
 
             <div class="footer">
