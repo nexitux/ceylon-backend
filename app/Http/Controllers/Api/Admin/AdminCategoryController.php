@@ -78,45 +78,93 @@ class AdminCategoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-   public function update(Request $request, string $id)
+  public function update(Request $request, string $id)
 {
+    // Decode ID
     $decodedId = $this->decodeId($id);
-    $category = Category::findOrFail($decodedId);
+    $category = Category::find($decodedId);
 
+    if (!$category) {
+        return response()->json(['message' => 'Category not found'], 404);
+    }
+
+    /**
+     * -----------------------------------------
+     * STEP 1: Validate NON-FILE fields only
+     * -----------------------------------------
+     */
     $validated = $request->validate([
         'name'   => 'sometimes|string|max:255',
-        'image'  => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        'image2' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        'image3' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-        'image4' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        'status' => 'boolean',
+        'status' => 'sometimes|boolean',
     ]);
 
     if (isset($validated['name'])) {
-        $validated['slug'] = \Str::slug($validated['name']) . '-' . $category->id;
+        $validated['slug'] = Str::slug($validated['name']) . '-' . $category->id;
     }
 
-    foreach (['image','image2','image3','image4'] as $field) {
+    /**
+     * -----------------------------------------
+     * STEP 2: Handle FILE uploads safely
+     * -----------------------------------------
+     */
+    $imageFields = ['image', 'image2', 'image3', 'image4'];
+
+    Log::info('Update Category Request', [
+        'method'     => $request->method(),
+        'files'      => array_keys($request->allFiles()),
+        'contentType'=> $request->header('Content-Type'),
+    ]);
+
+    foreach ($imageFields as $field) {
+
+        // Validate ONLY if file exists
         if ($request->hasFile($field)) {
 
-            $file = $request->file($field);
-            $filename = \Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME))
-                        . '-' . time() . '.' . $file->getClientOriginalExtension();
+            $request->validate([
+                $field => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            ]);
 
+            $file = $request->file($field);
+
+            // Safe filename
+            $filename = Str::slug(
+                pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)
+            ) . '-' . time() . '.' . $file->getClientOriginalExtension();
+
+            // Store file
             $path = $file->storeAs('categories', $filename, 'public');
 
-            // delete old image
-            if ($category->$field && \Storage::disk('public')->exists($category->$field)) {
-                \Storage::disk('public')->delete($category->$field);
+            Log::info("File uploaded", [
+                'field' => $field,
+                'path'  => $path,
+            ]);
+
+            // Delete old file if exists
+            if ($category->$field && Storage::disk('public')->exists($category->$field)) {
+                Storage::disk('public')->delete($category->$field);
             }
 
+            // Save new path
             $validated[$field] = $path;
         }
     }
 
+    /**
+     * -----------------------------------------
+     * STEP 3: Update database
+     * -----------------------------------------
+     */
     $category->update($validated);
 
-    return response()->json($category);
+    /**
+     * -----------------------------------------
+     * STEP 4: Response
+     * -----------------------------------------
+     */
+    $response = $category->fresh()->toArray();
+    $response['debug_version'] = 'final-upload-fix-v1';
+
+    return response()->json($response);
 }
 
     /**
