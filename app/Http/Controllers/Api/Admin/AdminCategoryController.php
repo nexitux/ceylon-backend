@@ -101,6 +101,15 @@ class AdminCategoryController extends Controller
         }
 
         $images = ['image', 'image2', 'image3', 'image4'];
+        
+        \Illuminate\Support\Facades\Log::info('Update Category Request', [
+            'id' => $id,
+            'method' => $request->method(),
+            'all_files' => $request->allFiles(),
+            'has_image3' => $request->hasFile('image3'),
+            'image3_error' => $request->file('image3') ? $request->file('image3')->getError() : 'N/A',
+        ]);
+
         foreach ($images as $imgField) {
             if ($request->hasFile($imgField)) {
                 $file = $request->file($imgField);
@@ -111,29 +120,38 @@ class AdminCategoryController extends Controller
                 
                 $path = $file->storeAs('categories', $filename, 'public');
                 
+                \Illuminate\Support\Facades\Log::info("File upload attempt for $imgField", ['path' => $path]);
+
                 if ($path) {
                     // Delete old image only if new one uploads successfully
-                    if ($category->$imgField && \Illuminate\Support\Facades\Storage::disk('public')->exists($category->$imgField)) {
+                    if ($category->$imgField && $category->$imgField !== '0' && \Illuminate\Support\Facades\Storage::disk('public')->exists($category->$imgField)) {
                         \Illuminate\Support\Facades\Storage::disk('public')->delete($category->$imgField);
                     }
                     $validated[$imgField] = $path;
                 } else {
+                     \Illuminate\Support\Facades\Log::error("File upload failed for $imgField");
                     unset($validated[$imgField]); // If storeAs fails, remove from validated
                 }
             } else {
-                // If no new file is uploaded for this field, ensure it's not in validated
-                // unless it was already there and we want to keep the old value.
-                // If the field was nullable and not provided, we should not overwrite it.
-                // The 'sometimes' rule handles this for validation, but we explicitly unset here
-                // to prevent accidental overwrites if the field was present in $validated
-                // but no file was uploaded.
                 unset($validated[$imgField]);
+        
+                // FIX: If the current value is "0" (from previous bad state) and we are not uploading a new file,
+                // we might ideally want to set it to null, but user might want to keep it?
+                // Actually, "0" is invalid for an image path. Let's force fix it to null if it's "0".
+                // But only do this if we are doing some cleanup. For now let's just log.
             }
         }
+        
+        // Auto-fix "0" values if they exist and we aren't updating them?
+        // No, let's stick to debugging first.
 
         $category->update($validated);
+        
+        // Debug info to verify deployment
+        $response = $category->toArray();
+        $response['debug_version'] = '1.0-log-enabled';
 
-        return response()->json($category);
+        return response()->json($response);
     }
 
     /**
