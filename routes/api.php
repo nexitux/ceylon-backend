@@ -42,7 +42,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::get('categories', [AdminCategoryController::class, 'index']);
     Route::post('categories', [AdminCategoryController::class, 'store']);
     Route::get('categories/{id}', [AdminCategoryController::class, 'show']);
-    Route::put('categories/{id}', [AdminCategoryController::class, 'update']);
+    Route::post('categories/{id}', [AdminCategoryController::class, 'update']);
     Route::delete('categories/{id}', [AdminCategoryController::class, 'destroy']);
     Route::delete('categories/{id}/image', [AdminCategoryController::class, 'deleteImage']);
 
