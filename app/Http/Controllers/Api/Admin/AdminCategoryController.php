@@ -78,81 +78,46 @@ class AdminCategoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
-    {
-        $decodedId = $this->decodeId($id);
-        $category = Category::find($decodedId);
+   public function update(Request $request, string $id)
+{
+    $decodedId = $this->decodeId($id);
+    $category = Category::findOrFail($decodedId);
 
-        if (!$category) {
-            return response()->json(['message' => 'Category not found'], 404);
-        }
+    $validated = $request->validate([
+        'name'   => 'sometimes|string|max:255',
+        'image'  => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        'image2' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        'image3' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        'image4' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        'status' => 'boolean',
+    ]);
 
-        $validated = $request->validate([
-            'name' => 'sometimes|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'image2' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'image3' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'image4' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'status' => 'boolean',
-        ]);
-
-        if (isset($validated['name'])) {
-            $validated['slug'] = \Illuminate\Support\Str::slug($validated['name']) . '-' . $category->id;
-        }
-
-        $images = ['image', 'image2', 'image3', 'image4'];
-        
-        \Illuminate\Support\Facades\Log::info('Update Category Request', [
-            'id' => $id,
-            'method' => $request->method(),
-            'all_files' => $request->allFiles(),
-            'has_image3' => $request->hasFile('image3'),
-            'image3_error' => $request->file('image3') ? $request->file('image3')->getError() : 'N/A',
-        ]);
-
-        foreach ($images as $imgField) {
-            if ($request->hasFile($imgField)) {
-                $file = $request->file($imgField);
-                
-                // Sanitize filename
-                $filename = \Illuminate\Support\Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) 
-                            . '-' . time() . '.' . $file->getClientOriginalExtension();
-                
-                $path = $file->storeAs('categories', $filename, 'public');
-                
-                \Illuminate\Support\Facades\Log::info("File upload attempt for $imgField", ['path' => $path]);
-
-                if ($path) {
-                    // Delete old image only if new one uploads successfully
-                    if ($category->$imgField && $category->$imgField !== '0' && \Illuminate\Support\Facades\Storage::disk('public')->exists($category->$imgField)) {
-                        \Illuminate\Support\Facades\Storage::disk('public')->delete($category->$imgField);
-                    }
-                    $validated[$imgField] = $path;
-                } else {
-                     \Illuminate\Support\Facades\Log::error("File upload failed for $imgField");
-                    unset($validated[$imgField]); // If storeAs fails, remove from validated
-                }
-            } else {
-                unset($validated[$imgField]);
-        
-                // FIX: If the current value is "0" (from previous bad state) and we are not uploading a new file,
-                // we might ideally want to set it to null, but user might want to keep it?
-                // Actually, "0" is invalid for an image path. Let's force fix it to null if it's "0".
-                // But only do this if we are doing some cleanup. For now let's just log.
-            }
-        }
-        
-        // Auto-fix "0" values if they exist and we aren't updating them?
-        // No, let's stick to debugging first.
-
-        $category->update($validated);
-        
-        // Debug info to verify deployment
-        $response = $category->toArray();
-        $response['debug_version'] = '1.0-log-enabled';
-
-        return response()->json($response);
+    if (isset($validated['name'])) {
+        $validated['slug'] = \Str::slug($validated['name']) . '-' . $category->id;
     }
+
+    foreach (['image','image2','image3','image4'] as $field) {
+        if ($request->hasFile($field)) {
+
+            $file = $request->file($field);
+            $filename = \Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME))
+                        . '-' . time() . '.' . $file->getClientOriginalExtension();
+
+            $path = $file->storeAs('categories', $filename, 'public');
+
+            // delete old image
+            if ($category->$field && \Storage::disk('public')->exists($category->$field)) {
+                \Storage::disk('public')->delete($category->$field);
+            }
+
+            $validated[$field] = $path;
+        }
+    }
+
+    $category->update($validated);
+
+    return response()->json($category);
+}
 
     /**
      * Remove the specified resource from storage.
