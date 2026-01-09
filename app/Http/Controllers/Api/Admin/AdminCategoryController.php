@@ -37,9 +37,17 @@ class AdminCategoryController extends Controller
         foreach ($images as $imgField) {
             if ($request->hasFile($imgField)) {
                 $file = $request->file($imgField);
-                $filename = $file->getClientOriginalName();
+                // Sanitize filename: slug of name + timestamp + extension
+                $filename = \Illuminate\Support\Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME))
+                            . '-' . time() . '.' . $file->getClientOriginalExtension();
+                
                 $path = $file->storeAs('categories', $filename, 'public');
-                $validated[$imgField] = $path;
+                
+                if ($path) {
+                    $validated[$imgField] = $path;
+                } else {
+                    unset($validated[$imgField]); // or handle error
+                }
             }
         }
 
@@ -95,14 +103,31 @@ class AdminCategoryController extends Controller
         $images = ['image', 'image2', 'image3', 'image4'];
         foreach ($images as $imgField) {
             if ($request->hasFile($imgField)) {
-                // Delete old image if exists
-                if ($category->$imgField && \Illuminate\Support\Facades\Storage::disk('public')->exists($category->$imgField)) {
-                    \Illuminate\Support\Facades\Storage::disk('public')->delete($category->$imgField);
-                }
                 $file = $request->file($imgField);
-                $filename = $file->getClientOriginalName();
+                
+                // Sanitize filename
+                $filename = \Illuminate\Support\Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) 
+                            . '-' . time() . '.' . $file->getClientOriginalExtension();
+                
                 $path = $file->storeAs('categories', $filename, 'public');
-                $validated[$imgField] = $path;
+                
+                if ($path) {
+                    // Delete old image only if new one uploads successfully
+                    if ($category->$imgField && \Illuminate\Support\Facades\Storage::disk('public')->exists($category->$imgField)) {
+                        \Illuminate\Support\Facades\Storage::disk('public')->delete($category->$imgField);
+                    }
+                    $validated[$imgField] = $path;
+                } else {
+                    unset($validated[$imgField]); // If storeAs fails, remove from validated
+                }
+            } else {
+                // If no new file is uploaded for this field, ensure it's not in validated
+                // unless it was already there and we want to keep the old value.
+                // If the field was nullable and not provided, we should not overwrite it.
+                // The 'sometimes' rule handles this for validation, but we explicitly unset here
+                // to prevent accidental overwrites if the field was present in $validated
+                // but no file was uploaded.
+                unset($validated[$imgField]);
             }
         }
 
