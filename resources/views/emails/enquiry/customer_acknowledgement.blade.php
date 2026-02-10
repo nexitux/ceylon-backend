@@ -125,62 +125,18 @@
                 @if(!empty($data['logo_url']))
                     <img src="{{ $data['logo_url'] }}" alt="Logo" class="logo" style="margin-bottom: 20px;">
                 @endif
-                <h1>We Received Your Enquiry!</h1>
+                <h1>Greetings from Ceylon – Your Hotel Booking Enquiry Has Been Received </h1>
             </div>
 
             <div class="email-body">
                 <p class="greeting">Hi {{ $data['e_name'] }},</p>
                 
-                <p>Thank you for reaching out to us. We have received your inquiry and our team will get back to you shortly.</p>
+                <p> Greetings from Ceylon, Thank you for contacting us. We have received your hotel booking enquiry and will get back to you shortly with the details.</p>
 
-                <div class="message-box">
-                    <h3 style="margin-top: 0; font-size: 16px; color: #374151; margin-bottom: 16px;">Submission Details</h3>
-                    <table class="details-table">
-                        <tr>
-                            <td class="label">Name:</td>
-                            <td class="value">{{ $data['e_name'] }}</td>
-                        </tr>
-                        <tr>
-                            <td class="label">Email:</td>
-                            <td class="value">{{ $data['e_email'] }}</td>
-                        </tr>
-                        <tr>
-                            <td class="label">Phone:</td>
-                            <td class="value">{{ $data['e_phone'] ?? 'N/A' }}</td>
-                        </tr>
-                        <tr>
-                            <td class="label">Check in date :</td>
-                            <td class="value">{{ $data['e_in_date'] ?? 'N/A' }}</td>
-                        </tr>
-                        <tr>
-                            <td class="label">Checkout date :</td>
-                            <td class="value">{{ $data['e_out_date'] ?? 'N/A' }}</td>
-                        </tr>
-                        <tr>
-                            <td class="label">Room Type:</td>
-                            <td class="value">{{ $data['e_r_type'] ?? 'N/A' }}</td>
-                        </tr>
-                        <tr>
-                            <td class="label">Number of Adults:</td>
-                            <td class="value">{{ $data['e_no_adults'] ?? 'N/A' }}</td>
-                        </tr>
-                        @if(!empty($data['e_no_children']))
-                            <tr>
-                                <td class="label">Number of Children:</td>
-                                <td class="value">{{ $data['e_no_children'] }}</td>
-                            </tr>
-                        @endif
+                 
 
-                        @if(!empty($data['e_desc']))
-                            <tr>
-                                <td class="label">Special Requests:</td>
-                                <td class="value">{{ $data['e_desc'] }}</td>
-                            </tr>
-                        @endif
-                    </table>
-                </div>
-
-                <p>If you have any additional information to add, please reply to this email.</p>
+                <p>Warm regards,</p>
+                <p>Team Ceylon Hotels</p>
             </div>
 
             <div class="footer">

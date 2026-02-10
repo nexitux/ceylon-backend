@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>New Contact Message</title>
+    <title>Message Received</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
         
@@ -40,7 +40,7 @@
             object-fit: contain;
         }
         .email-hero {
-            background-color: #3b82f6; /* Blue for Admin */
+            background-color: #10b981;
             padding: 40px;
             text-align: center;
             color: #ffffff;
@@ -85,6 +85,13 @@
             color: #1f2937;
             font-weight: 600;
         }
+        .user-message {
+            font-style: italic;
+            color: #4b5563;
+            border-left: 4px solid #10b981;
+            padding-left: 16px;
+            margin-top: 16px;
+        }
         .footer {
             background-color: #f9fafb;
             padding: 30px;
@@ -92,6 +99,18 @@
             font-size: 14px;
             color: #6b7280;
             border-top: 1px solid #e5e7eb;
+        }
+        .social-links {
+            margin-bottom: 20px;
+        }
+        .social-links a {
+            color: #6b7280;
+            text-decoration: none;
+            margin: 0 10px;
+            font-weight: 500;
+        }
+        .social-links a:hover {
+            color: #10b981;
         }
         @media (max-width: 600px) {
             .email-container { width: 100%; border-radius: 0; }
@@ -104,19 +123,18 @@
         <div class="email-container">
             <div class="email-hero">
                 @if(!empty($data['logo_url']))
-                    <!-- Using white background for logo visibility on blue -->
                     <img src="{{ $data['logo_url'] }}" alt="Logo" class="logo" style="margin-bottom: 20px;">
                 @endif
-                <h1>New Website Enquiry Received </h1> 
+                <h1>We Received Your Message!</h1>
             </div>
 
             <div class="email-body">
-                <p class="greeting">Hello Admin,</p>
+                <p class="greeting">Hi {{ $data['name'] }},</p>
                 
-                <p>You have received a new contact message from the website.</p>
+                <p>Thank you for reaching out to us. We have received your enquiry and our team will get back to you shortly.</p>
 
                 <div class="message-box">
-                    <h3 style="margin-top: 0; font-size: 16px; color: #374151; margin-bottom: 16px;">Details</h3>
+                    <h3 style="margin-top: 0; font-size: 16px; color: #374151; margin-bottom: 16px;">Submission Details</h3>
                     <table class="details-table">
                         <tr>
                             <td class="label">Name:</td>
@@ -139,7 +157,7 @@
                     </table>
                 </div>
 
-               
+                <p>If you have any additional information to add, please reply to this email.</p>
             </div>
 
             <div class="footer">

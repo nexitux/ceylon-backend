@@ -107,7 +107,7 @@
                     <!-- Using white background for logo visibility on blue -->
                     <img src="{{ $data['logo_url'] }}" alt="Logo" class="logo" style="margin-bottom: 20px;">
                 @endif
-                <h1>New Enquiry Message</h1>
+                <h1>New Hotel Booking Enquiry Received via Website</h1>
             </div>
 
             <div class="email-body">

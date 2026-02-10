@@ -27,7 +27,7 @@ class ContactFormCustomerMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'We Received Your Message',
+            subject: 'Thank You for Contacting Us -  Enquiry Received',
         );
     }
 

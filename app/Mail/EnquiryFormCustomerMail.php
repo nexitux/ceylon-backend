@@ -27,7 +27,7 @@ class EnquiryFormCustomerMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'We Received Your Enquiry',
+            subject: 'Greetings from Ceylon – Your Hotel Booking Enquiry Has Been Received',
         );
     }
 

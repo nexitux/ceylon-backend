@@ -27,7 +27,7 @@ class EnquiryFormAdminMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'New Enquiry Message - ' . ($this->data['e_name'] ?? 'Visitor'),
+            subject: 'New Hotel Booking Enquiry Received via Website - ' . ($this->data['e_name'] ?? 'Visitor'),
         );
     }
 

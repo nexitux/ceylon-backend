@@ -27,7 +27,7 @@ class ContactFormAdminMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'New Contact Message - ' . ($this->data['name'] ?? 'Visitor'),
+            subject: 'New Website Enquiry Received - ' . ($this->data['name'] ?? 'Visitor'),
         );
     }
 

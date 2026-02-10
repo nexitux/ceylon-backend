@@ -125,39 +125,20 @@
                 @if(!empty($data['logo_url']))
                     <img src="{{ $data['logo_url'] }}" alt="Logo" class="logo" style="margin-bottom: 20px;">
                 @endif
-                <h1>We Received Your Message!</h1>
+                <h1>Thank You for Contacting Us -  Enquiry Received!</h1>
             </div>
 
             <div class="email-body">
                 <p class="greeting">Hi {{ $data['name'] }},</p>
                 
-                <p>Thank you for reaching out to us. We have received your inquiry and our team will get back to you shortly.</p>
+                <p>Greetings from Ceylon, Thank you for reaching out to us. We have received your enquiry and our team is reviewing the details. We will get back to you shortly with the required information.
+                If you need any immediate assistance, please feel free to contact us on +91 75111 13333</p>
 
-                <div class="message-box">
-                    <h3 style="margin-top: 0; font-size: 16px; color: #374151; margin-bottom: 16px;">Submission Details</h3>
-                    <table class="details-table">
-                        <tr>
-                            <td class="label">Name:</td>
-                            <td class="value">{{ $data['name'] }}</td>
-                        </tr>
-                        <tr>
-                            <td class="label">Email:</td>
-                            <td class="value">{{ $data['email'] }}</td>
-                        </tr>
-                        <tr>
-                            <td class="label">Phone:</td>
-                            <td class="value">{{ $data['phone'] ?? 'N/A' }}</td>
-                        </tr>
-                        @if(!empty($data['location']))
-                        <tr>
-                            <td class="label">Location:</td>
-                            <td class="value">{{ $data['location'] }}</td>
-                        </tr>
-                        @endif
-                    </table>
-                </div>
+                 
 
-                <p>If you have any additional information to add, please reply to this email.</p>
+                <p>Warm regards,</p>
+                <p>Team Ceylon Hotels</p>
+
             </div>
 
             <div class="footer">
