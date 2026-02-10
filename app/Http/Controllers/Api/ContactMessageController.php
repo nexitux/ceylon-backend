@@ -75,6 +75,8 @@ class ContactMessageController extends Controller
         ]);
 
          
+        $validated['e_no_children'] = $request->e_no_children; 
+        $validated['e_desc'] = $request->e_desc; 
 
         // Fetch Site Settings for Admin Email and Logo
         $siteSettings = \App\Models\SiteSetting::first();
@@ -86,15 +88,15 @@ class ContactMessageController extends Controller
 
         // Send email to Admin
         if ($adminEmail) {
-            \Illuminate\Support\Facades\Mail::to($adminEmail)->send(new \App\Mail\EnquiryFormAdminMail($message));
+            \Illuminate\Support\Facades\Mail::to($adminEmail)->send(new \App\Mail\EnquiryFormAdminMail($validated));
         }
 
         // Send acknowledgment to Customer
-        \Illuminate\Support\Facades\Mail::to($validated['e_email'])->send(new \App\Mail\EnquiryFormCustomerMail($message));
+        \Illuminate\Support\Facades\Mail::to($validated['e_email'])->send(new \App\Mail\EnquiryFormCustomerMail($validated));
 
         return response()->json([
             'message' => 'Message sent successfully',
-            'data' => $message
+            'data' => $validated
         ], 201);
     }
 }
