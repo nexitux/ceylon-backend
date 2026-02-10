@@ -58,6 +58,10 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::get('contact-messages/{id}', [AdminContactMessageController::class, 'show']);
     Route::delete('contact-messages/{id}', [AdminContactMessageController::class, 'destroy']);
 
+    // Enquiry Messages
+    Route::get('getEnquiries', [AdminContactMessageController::class, 'getEnquiries']);
+    Route::delete('destroyEnquiry/{id}', [AdminContactMessageController::class, 'destroyEnquiry']);
+
     // Site Settings
     Route::get('site-settings', [AdminSiteSettingController::class, 'index']);
     Route::post('site-settings', [AdminSiteSettingController::class, 'store']);
@@ -69,6 +73,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
 
 // Public Contact Message
 Route::post('contact', [ContactMessageController::class, 'store']);
+// Public Enquiry Message
+Route::post('enquiry', [ContactMessageController::class, 'storeEnquiry']); 
 
 // Public Site Settings
 Route::get('site-settings', [SiteSettingController::class, 'index']);

@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ContactMessage;
+use App\Models\EnquiryMessage;
+
 use Illuminate\Http\Request;
 
 class AdminContactMessageController extends Controller
@@ -24,6 +26,8 @@ class AdminContactMessageController extends Controller
 
         return response()->json($messages);
     }
+
+
 
     /**
      * Display the specified resource.
@@ -55,6 +59,36 @@ class AdminContactMessageController extends Controller
         $message->delete();
 
         return response()->json(['message' => 'Message deleted']);
+    }
+
+
+    public function getEnquiries()
+    {
+        $messages = EnquiryMessage::latest()->get();
+
+        if ($messages->isEmpty()) {
+            return response()->json([
+                'message' => 'No enquiry messages found',
+                'data' => []
+            ]);
+        }
+
+        return response()->json($messages);
+    }
+
+
+    public function destroyEnquiry(string $id)
+    {
+        $decodedId = $this->decodeId($id);
+        $message = EnquiryMessage::find($decodedId);
+
+        if (!$message) {
+            return response()->json(['message' => 'Message not found'], 404);
+        }
+
+        $message->delete();
+
+        return response()->json(['message' => 'Enquiry message deleted']);
     }
 
     /**
