@@ -60,7 +60,7 @@ class ContactMessageController extends Controller
 
         $message = EnquiryMessage::create([  
             'e_name'      => $request->e_name,
-            'e_email'       => $e_email,
+            'e_email'       => $request->$e_email,
             'e_phone'      => $request->e_phone ?? '',
             'e_in_date'       => $request->e_in_date ?? '',
             'e_out_date'  => $request->e_out_date,
