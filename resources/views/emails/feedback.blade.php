@@ -578,7 +578,7 @@
 					</div>
 					<div class="comment-item">
 						<div class="c-tag tag-blue"><span class="c-dot"></span>Words of appreciation</div>
-						<div class="c-text">"{{$data->fe_appreciation}}"</div>
+						<div class="c-text">"{{$data->fe_appreciate}}"</div>
 					</div>
 					<!-- <div class="comment-item">
 						<div class="c-tag tag-gray"><span class="c-dot"></span>Additional feedback</div>
