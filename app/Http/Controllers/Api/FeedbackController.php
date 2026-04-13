@@ -14,7 +14,7 @@ class FeedbackController extends Controller
     public function storeFeedback()
     {
         $fe_data = Feedback::create([  
-            'fe_email'      => $request->fe_email ?? '',  
+            'fe_email1'      => $request->fe_email ?? '',  
             'created_at'  => now(),
             'updated_at'  => now(),
         ]);
