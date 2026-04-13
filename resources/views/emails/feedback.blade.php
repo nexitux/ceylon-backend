@@ -493,67 +493,48 @@
                     ];
                     @endphp
 
-                    <div class="card">
-                        <div class="card-head">
-                            <div class="card-icon">
-                                <svg viewBox="0 0 15 15" fill="none">
-                                    <path d="M7.5 1.5l1.7 3.44 3.8.55-2.75 2.68.65 3.78L7.5 10.2l-3.4 1.75.65-3.78L2 5.49l3.8-.55L7.5 1.5z"
-                                        stroke="#7a331d" stroke-width="1.2"/>
-                                </svg>
-                            </div>
-                            <span class="card-title">Category Ratings</span>
-                            <span class="card-count">{{ count($ratings) }} items</span>
-                        </div>
+                <table width="100%" cellpadding="8" cellspacing="0" style="border-collapse: collapse; font-family: Arial;">
+                    @foreach($ratings as $label => $value)
+                        @php
+                            $rating = (int) $value;
+                            $percent = ($rating / 4) * 100;
 
-                        @foreach($ratings as $label => $value)
-                            @php
-                                $rating = (int) $value;
-                                $percent = ($rating / 5) * 100;
+                            if ($rating >= 4) {
+                                $color = '#5a8a3a';
+                            } elseif ($rating == 3) {
+                                $color = '#c8921a';
+                            } else {
+                                $color = '#c85a1a';
+                            }
 
-                                // color logic
-                                if ($rating >= 4) {
-                                    $color = '#5a8a3a'; // green
-                                } elseif ($rating == 3) {
-                                    $color = '#c8921a'; // orange
-                                } else {
-                                    $color = '#c85a1a'; // red
-                                }
-                            @endphp
+                            // Stars (email safe)
+                            $stars = str_repeat('★', $rating) . str_repeat('☆', 4 - $rating);
+                        @endphp
 
-                            <div class="rating-row">
-                                <span class="r-name">{{ $label }}</span>
+                        <tr style="border-bottom:1px solid #eee;">
+                            <td width="30%" style="font-size:13px; color:#333;">
+                                {{ $label }}
+                            </td>
 
-                                <!-- Progress Bar -->
-                                <div class="r-bar">
-                                    <div class="r-fill"
-                                        style="width: {{ $percent }}%; background: {{ $color }};">
-                                    </div>
+                            <!-- Progress Bar -->
+                            <td width="40%">
+                                <div style="background:#eee; height:6px; border-radius:3px;">
+                                    <div style="width:{{ $percent }}%; background:{{ $color }}; height:6px; border-radius:3px;"></div>
                                 </div>
+                            </td>
 
-                                <!-- Stars -->
-                                <div class="r-stars">
-                                    @for($i = 1; $i <= 5; $i++)
-                                        @if($i <= $rating)
-                                            <!-- Filled Star -->
-                                            <svg viewBox="0 0 10 10">
-                                                <path d="M5 1l1.12 2.27 2.51.37-1.82 1.77.43 2.5L5 6.73 2.76 7.91l.43-2.5L1.37 3.64l2.51-.37L5 1z"
-                                                    fill="#c8761a"/>
-                                            </svg>
-                                        @else
-                                            <!-- Empty Star -->
-                                            <svg viewBox="0 0 10 10">
-                                                <path d="M5 1l1.12 2.27 2.51.37-1.82 1.77.43 2.5L5 6.73 2.76 7.91l.43-2.5L1.37 3.64l2.51-.37L5 1z"
-                                                    fill="none" stroke="#c8761a" stroke-width="1"/>
-                                            </svg>
-                                        @endif
-                                    @endfor
-                                </div>
+                            <!-- Stars -->
+                            <td width="20%" style="color:#c8761a; font-size:14px;">
+                                {{ $stars }}
+                            </td>
 
-                                <!-- Score -->
-                                <span class="r-score">{{ $rating }}/5</span>
-                            </div>
-                        @endforeach
-                    </div>
+                            <!-- Score -->
+                            <td width="10%" style="font-size:12px; text-align:right;">
+                                {{ $rating }}/4
+                            </td>
+                        </tr>
+                    @endforeach
+                </table>
 				<!-- YES / NO -->
 				 
 				<!-- COMMENTS -->
