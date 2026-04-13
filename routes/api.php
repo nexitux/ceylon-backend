@@ -11,6 +11,10 @@ use App\Http\Controllers\Api\Admin\AdminContactMessageController;
 use App\Http\Controllers\Api\SiteSettingController;
 use App\Http\Controllers\Api\Admin\AdminSiteSettingController;
 use App\Http\Controllers\Api\Admin\AdminDashboardController;
+use App\Http\Controllers\Api\Admin\AdminFeedbackController;
+use App\Http\Controllers\Api\Admin\FeedbackController;
+
+
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -69,6 +73,12 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
 
     // Dashboard
     Route::get('dashboard', [AdminDashboardController::class, 'index']);
+
+
+    Route::get('getFeedback', [AdminFeedbackController::class, 'getFeedback']);
+    Route::post('filterFeedback', [AdminFeedbackController::class, 'filterFeedback']);
+
+
 });
 
 // Public Contact Message
@@ -78,3 +88,9 @@ Route::post('enquiry', [ContactMessageController::class, 'storeEnquiry']);
 
 // Public Site Settings
 Route::get('site-settings', [SiteSettingController::class, 'index']);
+
+
+
+Route::post('storeFeedback', [FeedbackController::class, 'storeFeedback']);
+Route::post('updateFeedback', [FeedbackController::class, 'updateFeedback']);
+
