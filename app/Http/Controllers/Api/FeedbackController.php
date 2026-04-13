@@ -87,15 +87,26 @@ class FeedbackController extends Controller
 
 
 
-        if ($request->filled('fe_feedback') && $request->fe_email!='0') {
-            Mail::to('estherthe00@gmail.com')->send(new FeedbackMail($fe_data));
+        if ($request->filled('fe_feedback') ) {
+            if($adminEmail){
+                Mail::to('estherthe00@gmail.com')->send(new FeedbackMail($fe_data));
+
+            }
+            // ✅ SEND THANK YOU MAIL TO CUSTOMER
+            if ($request->fe_email!='0' && $fe_data->fe_email) {
+                Mail::to($fe_data->fe_email)->send(new ThankYouFeedbackMail($fe_data));
+            }
+
+
+            Feedback::where('fe_id', base64_decode($id))
+            ->where('fe_mail_sent', '1')
+            ->update();
+
+
         }
 
 
-        // ✅ SEND THANK YOU MAIL TO CUSTOMER
-        if ($request->filled('fe_feedback') && $request->fe_email!='0' && $fe_data->fe_email ) {
-            Mail::to($fe_data->fe_email)->send(new ThankYouFeedbackMail($fe_data));
-        }
+        
 
 
         return response()->json([
