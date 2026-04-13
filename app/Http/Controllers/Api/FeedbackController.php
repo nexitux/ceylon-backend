@@ -84,15 +84,24 @@ class FeedbackController extends Controller
 
 
         // 🔥 SEND MAIL ONLY IF fe_feedback EXISTS
-        if ($request->filled('fe_feedback')) {
+
+
+
+        if ($request->filled('fe_feedback') && !$fe_data->fe_mail_sent) {
+
+            // Send admin mail
             Mail::to('estherthe00@gmail.com')->send(new FeedbackMail($fe_data));
+
+            // Send customer mail
+            if ($fe_data->fe_email) {
+                Mail::to($fe_data->fe_email)->send(new ThankYouFeedbackMail($fe_data));
+            }
+
+            // ✅ Mark as sent
+            $fe_data->update(['fe_mail_sent' => 1]);
         }
 
-
-        // ✅ SEND THANK YOU MAIL TO CUSTOMER
-        if ($request->filled('fe_feedback') && $fe_data->fe_email) {
-            Mail::to($fe_data->fe_email)->send(new ThankYouFeedbackMail($fe_data));
-        }
+         
 
 
         return response()->json([
