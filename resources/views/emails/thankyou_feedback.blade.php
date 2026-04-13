@@ -294,23 +294,23 @@
 					</div>
 					<div class="summary-row">
 						<span class="s-label">Guest name</span>
-						<span class="s-val brown">{{ $data->fe_name }}</span>
+						<span class="s-val brown"> - {{ $data->fe_name }}</span>
 					</div>
 					<div class="summary-row">
 						<span class="s-label">Room</span>
-						<span class="s-val">Room {{ $data->fe_room_no }}</span>
+						<span class="s-val"> - Room {{ $data->fe_room_no }}</span>
 					</div>
 					<div class="summary-row">
 						<span class="s-label">Date</span>
-						<span class="s-val">{{ $data->fe_date }}</span>
+						<span class="s-val"> - {{ $data->fe_date }}</span>
 					</div>
 					<div class="summary-row">
 						<span class="s-label">Visit again</span>
-						<span class="s-val brown">{{ $data->fe_stay_with_us_again }} </span>
+						<span class="s-val brown"> - {{ $data->fe_stay_with_us_again }} </span>
 					</div>
 					<div class="summary-row">
 						<span class="s-label">Would recommend</span>
-						<span class="s-val brown">{{ $data->fe_recommend }} </span>
+						<span class="s-val brown"> - {{ $data->fe_recommend }} </span>
 					</div>
 				</div>
 				<!-- PERSONAL MESSAGE -->
