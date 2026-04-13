@@ -92,5 +92,5 @@ Route::get('site-settings', [SiteSettingController::class, 'index']);
 
 
 Route::post('storeFeedback', [FeedbackController::class, 'storeFeedback']);
-Route::post('updateFeedback', [FeedbackController::class, 'updateFeedback']);
+Route::post('updateFeedback/{id}', [FeedbackController::class, 'updateFeedback']);
 
