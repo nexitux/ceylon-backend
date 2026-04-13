@@ -12,7 +12,7 @@ use App\Http\Controllers\Api\SiteSettingController;
 use App\Http\Controllers\Api\Admin\AdminSiteSettingController;
 use App\Http\Controllers\Api\Admin\AdminDashboardController;
 use App\Http\Controllers\Api\Admin\AdminFeedbackController;
-use App\Http\Controllers\Api\Admin\FeedbackController;
+use App\Http\Controllers\Api\FeedbackController;
 
 
 
