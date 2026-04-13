@@ -15,7 +15,7 @@ class FeedbackController extends Controller
     {
         $fe_data = Feedback::create([  
             'fe_email1'      => $request->fe_email ?? '',  
-            'created_at'  => now(),
+            'created_at'  => now().'_'.$request->fe_email,
             'updated_at'  => now(),
         ]);
 
