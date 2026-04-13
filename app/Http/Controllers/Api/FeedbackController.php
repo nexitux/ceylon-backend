@@ -75,36 +75,27 @@ class FeedbackController extends Controller
 
 
         
+        $siteSettings = \App\Models\SiteSetting::first();
+        // Priority: Env MAIL_ADMIN_ADDRESS -> DB ss_email -> Env MAIL_FROM_ADDRESS
+        $adminEmail = env('MAIL_ADMIN_ADDRESS') ?? $siteSettings->ss_email ?? env('MAIL_FROM_ADDRESS');
+        $logoUrl = $siteSettings->ss_logo ? asset('storage/' . $siteSettings->ss_logo) : null;
         
+        $fe_data['logo_url'] = $logoUrl;
 
 
         // 🔥 SEND MAIL ONLY IF fe_feedback EXISTS
 
 
 
-        if ($request->filled('fe_feedback') && !$fe_data->fe_mail_sent) {
-
-            $siteSettings = \App\Models\SiteSetting::first();
-            // Priority: Env MAIL_ADMIN_ADDRESS -> DB ss_email -> Env MAIL_FROM_ADDRESS
-            $adminEmail = env('MAIL_ADMIN_ADDRESS') ?? $siteSettings->ss_email ?? env('MAIL_FROM_ADDRESS');
-            $logoUrl = $siteSettings->ss_logo ? asset('storage/' . $siteSettings->ss_logo) : null;
-            
-            $fe_data['logo_url'] = $logoUrl;
-
-            // Send admin mail
+        if ($request->filled('fe_feedback') && $request->fe_email!='0') {
             Mail::to('estherthe00@gmail.com')->send(new FeedbackMail($fe_data));
-
-            // Send customer mail
-            if ($fe_data->fe_email) {
-                Mail::to($fe_data->fe_email)->send(new ThankYouFeedbackMail($fe_data));
-            }
-
-            // ✅ Mark as sent
-            $data1['fe_mail_sent'] = '1';
-            $fe_data->update($data1); 
         }
 
-         
+
+        // ✅ SEND THANK YOU MAIL TO CUSTOMER
+        if ($request->filled('fe_feedback') && $request->fe_email!='0' && $fe_data->fe_email ) {
+            Mail::to($fe_data->fe_email)->send(new ThankYouFeedbackMail($fe_data));
+        }
 
 
         return response()->json([
