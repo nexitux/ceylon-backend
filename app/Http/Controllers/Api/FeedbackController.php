@@ -98,9 +98,9 @@ class FeedbackController extends Controller
             }
 
 
-            Feedback::where('fe_id', base64_decode($id))
-            ->where('fe_mail_sent', '1')
-            ->update();
+            // Feedback::where('fe_id', base64_decode($id))
+            // ->where('fe_mail_sent', '1')
+            // ->update();
 
 
         }
