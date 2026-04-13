@@ -6,6 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\Feedback;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Mail;
+use App\Mail\FeedbackMail;
+use App\Mail\ThankYouFeedbackMail;
+
+
 class FeedbackController extends Controller
 {
     /**
@@ -14,7 +19,9 @@ class FeedbackController extends Controller
     public function storeFeedback(Request $request)
     {
         $fe_data = Feedback::create([  
-            'fe_email'      => $request->fe_email ?? '',  
+            'fe_email'      => $request->fe_email ?? '0', 
+            'fe_check_in_process' => $request->fe_check_in_process ?? '',
+            'fe_staff_friendliness' => $request->fe_staff_friendliness ?? '',
             'created_at'  => now(),
             'updated_at'  => now(),
         ]);
@@ -34,9 +41,7 @@ class FeedbackController extends Controller
         
 
 
-        $data = $request->only([ 
-            'fe_check_in_process',
-            'fe_staff_friendliness',
+        $data = $request->only([  
             'fe_cleanliness',
             'fe_bed_comfort',
             'fe_bathroom',
@@ -52,6 +57,7 @@ class FeedbackController extends Controller
             'fe_room_no',
             'fe_date',
             'fe_phone',
+            'fe_email',
             'fe_like',
             'fe_improve',
             'fe_appreciate',
@@ -66,6 +72,28 @@ class FeedbackController extends Controller
         $data['updated_at'] = now();
 
         $fe_data->update($data);
+
+
+        
+        $siteSettings = \App\Models\SiteSetting::first();
+        // Priority: Env MAIL_ADMIN_ADDRESS -> DB ss_email -> Env MAIL_FROM_ADDRESS
+        $adminEmail = env('MAIL_ADMIN_ADDRESS') ?? $siteSettings->ss_email ?? env('MAIL_FROM_ADDRESS');
+        $logoUrl = $siteSettings->ss_logo ? asset('storage/' . $siteSettings->ss_logo) : null;
+        
+        $fe_data['logo_url'] = $logoUrl;
+
+
+        // 🔥 SEND MAIL ONLY IF fe_feedback EXISTS
+        if ($request->filled('fe_feedback')) {
+            Mail::to('estherthe00@gmail.com')->send(new FeedbackMail($fe_data));
+        }
+
+
+        // ✅ SEND THANK YOU MAIL TO CUSTOMER
+        if ($request->filled('fe_feedback') && $fe_data->fe_email) {
+            Mail::to($fe_data->fe_email)->send(new ThankYouFeedbackMail($fe_data));
+        }
+
 
         return response()->json([
             'message' => 'Feedback updated', 
