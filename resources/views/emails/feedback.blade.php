@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>Guest Feedback – Ceylon Bake House</title>
+		<title>Guest Feedback – Ceylon Hotels</title>
 		<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet">
 		<style>
 			* { box-sizing: border-box; margin: 0; padding: 0; }
@@ -395,7 +395,7 @@
                     @endif
 				</div>
 				<div class="header-info">
-					<h1>Ceylon Bake House</h1>
+					<h1>Ceylon Hotels</h1>
 					<p>Guest Feedback Report · For Owner &amp; Front Desk</p>
 				</div>
 				<div class="new-badge">New</div>
@@ -573,7 +573,7 @@
 			<!-- FOOTER -->
 			<div class="footer">
 				<div>
-					<div class="f-brand">Ceylon Bake House</div>
+					<div class="f-brand">Ceylon Hotels</div>
 					<div class="f-sub">Internal report · Owner &amp; Front Desk</div>
 				</div>
 				<div class="f-note">Automated notification.<br>Do not reply to this email.</div>

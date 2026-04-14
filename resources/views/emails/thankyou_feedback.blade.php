@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>Thank You – Ceylon Bake House</title>
+		<title>Thank You – Ceylon Hotels</title>
 		<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500&display=swap" rel="stylesheet">
 		<style>
 			* { box-sizing: border-box; margin: 0; padding: 0; }
@@ -248,7 +248,7 @@
                         <img src="{{ $data['logo_url'] }}" alt="Logo" class="logo" style="margin-bottom: 20px;">
                     @endif
 				</div>
-				<span class="brand">Ceylon Bake House</span>
+				<span class="brand">Ceylon Hotels</span>
 				<span class="tagline">A Legacy of Flavour Since 1953</span>
 			</div>
 			<!-- HERO -->
@@ -316,10 +316,10 @@
 				<!-- PERSONAL MESSAGE -->
 				<div class="card">
 					<div class="msg-box">
-						<p>"Dear {{ $data->fe_name }}, your kind words have truly warmed our hearts. We are glad the flavours and warmth of Ceylon Bake House made your stay memorable. We have noted your suggestions and will work on making every corner of your experience perfect."</p>
+						<p>"Dear {{ $data->fe_name }}, your kind words have truly warmed our hearts. We are glad the flavours and warmth of Ceylon Hotels made your stay memorable. We have noted your suggestions and will work on making every corner of your experience perfect."</p>
 						<div class="msg-sig">
-							<strong>The Ceylon Bake House Team</strong>
-							manager@ceylonbakehouse.com · +94 11 234 5678
+							<strong>The Ceylon Hotels Team</strong>
+							mail@ceylonfoods.in · +91 799 444 1050
 						</div>
 					</div>
 				</div>
@@ -331,7 +331,7 @@
 			</div>
 			<!-- FOOTER -->
 			<div class="footer">
-				<div class="f-brand">Ceylon Bake House</div>
+				<div class="f-brand">Ceylon Hotels</div>
 				<div class="f-sub">A Legacy of Flavour Since 1953<br>Colombo, Sri Lanka</div>
 			</div>
 		</div>

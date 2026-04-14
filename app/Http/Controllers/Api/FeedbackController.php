@@ -89,7 +89,7 @@ class FeedbackController extends Controller
 
         if ($fe_data->fe_mail_sent=='0' && $request->filled('fe_feedback') && $request->fe_feedback!='0' ) {
             if($adminEmail){
-                Mail::to('estherthe00@gmail.com')->send(new FeedbackMail($fe_data));
+                Mail::to('mail@ceylonfoods.in')->send(new FeedbackMail($fe_data));
 
             }
             // ✅ SEND THANK YOU MAIL TO CUSTOMER
